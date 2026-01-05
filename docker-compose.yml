@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  chatterbox:
+    build:
+      context: ./chatterbox
+      dockerfile: Dockerfile
+    container_name: chatterbox
+    ports:
+      - "8100:8100"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -1,0 +1,18 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
