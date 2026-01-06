@@ -1,5 +1,7 @@
 # Local Chatterbox TTS Server
 
+> Part of the [P16 GPU Server](https://github.com/profzeller/p16-server-setup) ecosystem
+
 Dedicated Text-to-Speech server using Chatterbox on a local GPU.
 
 Optimized for 24GB VRAM GPUs (RTX 4090, etc.) - uses only ~3GB VRAM, leaving plenty of headroom.
