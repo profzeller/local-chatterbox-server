@@ -20,13 +20,15 @@ WORKDIR /app
 # Upgrade pip first
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Install chatterbox-tts with all dependencies
-# Using git install for latest version with proper deps
-RUN pip install --no-cache-dir \
-    chatterbox-tts \
-    fastapi \
-    uvicorn \
-    python-multipart
+# Configure pip for better reliability (retries, timeout)
+RUN pip config set global.retries 10 && \
+    pip config set global.timeout 60
+
+# Install FastAPI deps first (small, fast)
+RUN pip install --no-cache-dir fastapi uvicorn python-multipart
+
+# Install chatterbox-tts (has many dependencies, may take time)
+RUN pip install --no-cache-dir chatterbox-tts
 
 # Copy server code
 COPY server.py /app/server.py
