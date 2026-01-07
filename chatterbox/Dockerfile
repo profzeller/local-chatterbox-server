@@ -24,9 +24,13 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip config set global.retries 10 && \
     pip config set global.timeout 60
 
-# Upgrade PyTorch stack together (must match CUDA 12.4 from base image)
-# This fixes torchvision::nms operator conflict with transformers
-RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+# Force reinstall PyTorch stack with pinned versions (base image uses conda, causes conflicts)
+# PyTorch 2.4.0 + torchvision 0.19.0 + torchaudio 2.4.0 are compatible
+RUN pip install --no-cache-dir --force-reinstall \
+    torch==2.4.0 \
+    torchvision==0.19.0 \
+    torchaudio==2.4.0 \
+    --index-url https://download.pytorch.org/whl/cu124
 
 # Install FastAPI deps first (small, fast)
 RUN pip install --no-cache-dir fastapi uvicorn python-multipart
