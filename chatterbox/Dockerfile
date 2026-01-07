@@ -29,11 +29,11 @@ RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip config set global.retries 10 && \
     pip config set global.timeout 60
 
-# Install PyTorch stack with CUDA 12.4 support
+# Install PyTorch stack with CUDA 12.4 support (latest stable)
 RUN pip install --no-cache-dir \
-    torch==2.4.0 \
-    torchvision==0.19.0 \
-    torchaudio==2.4.0 \
+    torch==2.5.1 \
+    torchvision==0.20.1 \
+    torchaudio==2.5.1 \
     --index-url https://download.pytorch.org/whl/cu124
 
 # Install FastAPI deps
