@@ -48,7 +48,24 @@ def load_model():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"[Server] Using device: {device}")
 
+    # Enable CUDA optimizations
+    if device == "cuda":
+        torch.backends.cudnn.benchmark = True
+        torch.backends.cuda.matmul.allow_tf32 = True
+        torch.backends.cudnn.allow_tf32 = True
+        print("[Server] CUDA optimizations enabled (cudnn.benchmark, TF32)")
+
     tts_model = ChatterboxTTS.from_pretrained(device=device)
+
+    # Compile model for faster inference (PyTorch 2.0+)
+    if hasattr(torch, 'compile'):
+        print("[Server] Compiling model with torch.compile (this may take a minute)...")
+        try:
+            tts_model = torch.compile(tts_model, mode="reduce-overhead")
+            print("[Server] Model compiled successfully")
+        except Exception as e:
+            print(f"[Server] torch.compile failed, using eager mode: {e}")
+
     print("[Server] Model loaded successfully")
 
     return tts_model
