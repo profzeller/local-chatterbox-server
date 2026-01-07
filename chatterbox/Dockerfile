@@ -24,8 +24,9 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip config set global.retries 10 && \
     pip config set global.timeout 60
 
-# Upgrade torchvision to match transformers requirements
-RUN pip install --no-cache-dir --upgrade torchvision
+# Upgrade PyTorch stack together (must match CUDA 12.4 from base image)
+# This fixes torchvision::nms operator conflict with transformers
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 
 # Install FastAPI deps first (small, fast)
 RUN pip install --no-cache-dir fastapi uvicorn python-multipart
