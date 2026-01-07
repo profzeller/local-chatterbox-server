@@ -24,6 +24,9 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip config set global.retries 10 && \
     pip config set global.timeout 60
 
+# Upgrade torchvision to match transformers requirements
+RUN pip install --no-cache-dir --upgrade torchvision
+
 # Install FastAPI deps first (small, fast)
 RUN pip install --no-cache-dir fastapi uvicorn python-multipart
 
@@ -33,8 +36,8 @@ RUN pip install --no-cache-dir chatterbox-tts
 # Copy server code
 COPY server.py /app/server.py
 
-# Pre-download model during build
-RUN python -c "from chatterbox.tts import ChatterboxTTS; print('Downloading model...'); ChatterboxTTS.from_pretrained(device='cpu'); print('Done!')"
+# Pre-download model during build (skip if it fails - will download on first use)
+RUN python -c "from chatterbox.tts import ChatterboxTTS; print('Downloading model...'); ChatterboxTTS.from_pretrained(device='cpu'); print('Done!')" || echo "Model will download on first use"
 
 EXPOSE 8100
 
