@@ -12,31 +12,21 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     libsndfile1 \
     curl \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install Chatterbox TTS without deps to avoid PyTorch conflicts
-RUN pip install --no-cache-dir --no-deps chatterbox-tts
+# Upgrade pip first
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Install chatterbox dependencies
+# Install chatterbox-tts with all dependencies
+# Using git install for latest version with proper deps
 RUN pip install --no-cache-dir \
-    conformer \
-    s3tokenizer \
-    librosa \
-    resemble-perth \
-    huggingface_hub \
-    safetensors \
-    transformers \
-    diffusers \
-    einops \
-    soundfile \
-    scipy \
-    omegaconf \
-    pyloudnorm
-
-# Install FastAPI server dependencies
-RUN pip install --no-cache-dir fastapi uvicorn python-multipart
+    chatterbox-tts \
+    fastapi \
+    uvicorn \
+    python-multipart
 
 # Copy server code
 COPY server.py /app/server.py
