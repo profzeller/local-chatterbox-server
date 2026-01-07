@@ -39,6 +39,9 @@ RUN pip install --no-cache-dir \
 # Install FastAPI deps
 RUN pip install --no-cache-dir fastapi uvicorn python-multipart
 
+# Pin transformers to avoid torchvision import issue in newer versions
+RUN pip install --no-cache-dir "transformers<4.46.0"
+
 # Install chatterbox-tts (has many dependencies, may take time)
 RUN pip install --no-cache-dir chatterbox-tts
 
